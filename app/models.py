@@ -1,5 +1,7 @@
 from enum import unique
 from operator import index
+
+from sqlalchemy.orm import backref
 from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
 
@@ -48,3 +50,26 @@ class Category(db.Model):
         return categories
 
 
+class Pitch(db.Model):
+    ___Tablename__ = 'pitches'
+
+    id = db.Column(db.Integer,primary_key = True)
+    category_id = db.Column(db.Integer,db.ForeignKey('categories.id'))
+    content = db.Column(db.String)
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    comment = db.relationship('Comments',backref='pitches',lazy = 'dynamic')
+    vote = db.relationship('Votes',backref='pitches',lazy = 'dynamic')
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def get_pitches(id):
+        pitches = Pitch.query.filter_by(category_id=id).all()
+        return pitches
+
+    @classmethod
+    def clear_pitches(cls):
+        Pitch.all_pitches.clear()
+
+    

@@ -71,3 +71,25 @@ def new_category():
 
     title = 'New category'
     return render_template('new_category.html', category_form = form,title=title)
+
+
+
+#A route for adding a comment
+@main.route('/write_comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def post_comment(id):
+    ''' function to post comments '''
+    form = CommentsForm()
+    title = 'post comment'
+    pitches = Pitch.query.filter_by(id=id).first()
+
+    if pitches is None:
+         abort(404)
+
+    if form.validate_on_submit():
+        opinion = form.opinion.data
+        new_comment = Comments(opinion=opinion, user_id=current_user.id, pitches_id=pitches.id)
+        new_comment.save_comment()
+        return redirect(url_for('.view_pitch', id=pitches.id))
+
+    return render_template('post_comment.html', comment_form=form, title=title)

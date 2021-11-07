@@ -9,3 +9,11 @@ class PitchForm(FlaskForm):
     '''
     content = TextAreaField('Impress')
     submit = SubmitField('Submit')
+
+
+class CommentsForm(FlaskForm):
+    '''
+    Class to create a wtf form for commenting a pitch
+    '''
+    opinion = TextAreaField('WRITE COMMENT')
+    submit = SubmitField('SUBMIT')

@@ -114,7 +114,7 @@ def view_pitch(id):
     return render_template('view-pitch.html', pitches=pitches, comment=comment, category_id=id)
 
 
-#Routes upvoting/downvoting pitches
+#Route upvoting pitches
 @main.route('/pitch/upvote/<int:id>')
 @login_required
 def upvote(id):
@@ -129,3 +129,35 @@ def upvote(id):
     new_vote = Votes(vote=int(1), user_id=current_user.id, pitches_id=pitch_id.id)
     new_vote.save_vote()
     return redirect(url_for('.view_pitch', id=id))
+
+
+
+#Route for downvoting pitches
+@main.route('/pitch/downvote/<int:id>')
+@login_required
+def downvote(id):
+
+    '''
+    View function that add one to the vote_number column in the votes table
+    '''
+    pitch_id = Pitch.query.filter_by(id=id).first()
+
+    if pitch_id is None:
+         abort(404)
+
+    new_vote = Votes(vote=int(2), user_id=current_user.id, pitches_id=pitch_id.id)
+    new_vote.save_vote()
+    return redirect(url_for('.view_pitch', id=id))
+
+
+
+@main.route('/pitch/downvote/<int:id>')
+def vote_count(user_id,line_id):
+    '''
+    View function to return the total vote count per pitch
+    '''
+    votes = Votes.query.filter_by(user_id=user_id, line_id=line_id).all()
+
+    total_votes = votes.count()
+
+    return total_votes

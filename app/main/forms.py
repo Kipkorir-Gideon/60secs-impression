@@ -15,5 +15,13 @@ class CommentsForm(FlaskForm):
     '''
     Class to create a wtf form for commenting a pitch
     '''
-    opinion = TextAreaField('WRITE COMMENT')
-    submit = SubmitField('SUBMIT')
+    comment = TextAreaField('Comment')
+    submit = SubmitField('Submit')
+
+
+class CategoryForm(FlaskForm):
+    '''
+    Class to create a wtf form for choosing a category 
+    '''
+    name =  StringField('Category Name', validators=[Required()])
+    submit = SubmitField('Create')

@@ -93,3 +93,22 @@ def post_comment(id):
         return redirect(url_for('.view_pitch', id=pitches.id))
 
     return render_template('post_comment.html', comment_form=form, title=title)
+
+
+
+#view single pitch alongside its comments
+@main.route('/view-pitch/<int:id>', methods=['GET', 'POST'])
+@login_required
+def view_pitch(id):
+    '''
+    Function the returns a single pitch for comment to be added
+    '''
+    print(id)
+    pitches = Pitch.query.get(id)
+    # pitches = Pitch.query.filter_by(id=id).all()
+
+    if pitches is None:
+        abort(404)
+    #
+    comment = Comments.get_comments(id)
+    return render_template('view-pitch.html', pitches=pitches, comment=comment, category_id=id)

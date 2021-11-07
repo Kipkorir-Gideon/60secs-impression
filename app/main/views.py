@@ -39,3 +39,14 @@ def pitch(id):
         return redirect(url_for('.category', id=category.id))
 
     return render_template('pitch.html', pitch_form=form, category=category)
+
+
+#A route to display pitches of a specific category
+@main.route('/categories/<int:id>')
+def category(id):
+    category = Category.query.get(id)
+    if category is None:
+        abort(404)
+
+    pitches=Pitch.get_pitches(id)
+    return render_template('category.html', pitches=pitches, category=category)

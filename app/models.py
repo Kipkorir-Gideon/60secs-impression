@@ -13,6 +13,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+
+class PhotoProfile(db.Model):
+    __tablename__ = 'profile_photos'
+
+    id = db.Column(db.Integer,primary_key = True)
+    pic_path = db.Column(db.String())
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+
 class User(UserMixin,db.Model):
     __tablename__ = 'users'
 
@@ -23,7 +32,7 @@ class User(UserMixin,db.Model):
     profile_pic_path = db.Column(db.String)
     password_hash = db.Column(db.String(200))
     pitches = db.relationship('Pitch',backref='user',lazy='dynamic')
-    comment = db.relationship('Comments',backref='user',lazy='dyamic')
+    comment = db.relationship('Comments',backref='user',lazy='dynamic')
     vote = db.relationship('Votes',backref='user',lazy='dynamic')
 
     @property
@@ -61,12 +70,12 @@ class Category(db.Model):
 
 
 class Pitch(db.Model):
-    ___Tablename__ = 'pitches'
+    __tablename__ = 'pitches'
 
     id = db.Column(db.Integer,primary_key = True)
-    category_id = db.Column(db.Integer,db.ForeignKey('categories.id'))
+    category_id = db.Column(db.Integer,db.ForeignKey("categories.id"))
     content = db.Column(db.String)
-    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     comment = db.relationship('Comments',backref='pitches',lazy = 'dynamic')
     vote = db.relationship('Votes',backref='pitches',lazy = 'dynamic')
 
@@ -89,11 +98,11 @@ class Comments(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     comment = db.Column(db.String(255))
     time_commented = db.Column(db.DateTime, default = datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    pitches_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    pitches_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
 
     def save_comment(self):
-        db.session.add()
+        db.session.add(self)
         db.session.commit()
 
     @classmethod
@@ -108,11 +117,11 @@ class Votes(db.Model):
 
     id = db.Column(db.Integer,primary_key = True)
     vote = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    pitches_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    pitches_id = db.Column(db.Integer, db.ForeignKey("pitches.id"))
 
     def save_vote(self):
-        db.session.add()
+        db.session.add(self)
         db.session.commit()
 
     @classmethod

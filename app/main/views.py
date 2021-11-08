@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, url_for, abort
+from flask import render_template,request, redirect, url_for, abort
 from . import main
-from ..models import User,Pitch,Comments,Category,Votes
-from .. import db
-from . forms import PitchForm, CommentsForm, CategoryForm
+from ..models import User,Pitch,Comments,Category,Votes,PhotoProfile
+from .. import db,photos
+from . forms import PitchForm, CommentsForm, CategoryForm,UpdateProfile
 from flask_login import login_required,current_user
 
 
@@ -11,10 +11,10 @@ from flask_login import login_required,current_user
 def index():
     """ View root page function that returns index page """
 
-    category = Category.get_categories()
+    categories = Category.get_categories()
 
-    title = 'Home- Welcome'
-    return render_template('index.html', title = title, categories=category)
+    title = '60secs-impression'
+    return render_template('index.html', title = title, categories=categories)
 
 
 #Route for adding a new pitch
@@ -87,8 +87,8 @@ def post_comment(id):
          abort(404)
 
     if form.validate_on_submit():
-        opinion = form.opinion.data
-        new_comment = Comments(opinion=opinion, user_id=current_user.id, pitches_id=pitches.id)
+        comment = form.comment.data
+        new_comment = Comments(comment=comment, user_id=current_user.id, pitches_id=pitches.id)
         new_comment.save_comment()
         return redirect(url_for('.view_pitch', id=pitches.id))
 
@@ -111,7 +111,7 @@ def view_pitch(id):
         abort(404)
     #
     comment = Comments.get_comments(id)
-    return render_template('view-pitch.html', pitches=pitches, comment=comment, category_id=id)
+    return render_template('view_pitch.html', pitches=pitches, comment=comment, category_id=id)
 
 
 #Route upvoting pitches
@@ -161,3 +161,48 @@ def vote_count(user_id,line_id):
     total_votes = votes.count()
 
     return total_votes
+
+
+
+@main.route('/user/<uname>')
+@login_required
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+
+    if user is None:
+        abort(404)
+
+    return render_template("profile/profile.html", user = user)
+
+
+@main.route('/user/<uname>/update',methods = ['GET','POST'])
+@login_required
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+
+    form = UpdateProfile()
+
+    if form.validate_on_submit():
+
+        user.bio = form.bio.data
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('.profile',uname=user.username))
+
+    return render_template('profile/update.html',form =form)
+
+
+@main.route('/user/<uname>/update/pic',methods= ['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname=uname))

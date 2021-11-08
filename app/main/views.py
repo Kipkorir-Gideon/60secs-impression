@@ -1,6 +1,6 @@
 from flask import render_template,request, redirect, url_for, abort
 from . import main
-from ..models import User,Pitch,Comments,Category,Votes,PhotoProfile
+from ..models import User,Pitch,Comments,Category,Upvote,Downvote,PhotoProfile
 from .. import db,photos
 from . forms import PitchForm, CommentsForm, CategoryForm,UpdateProfile
 from flask_login import login_required,current_user
@@ -118,17 +118,18 @@ def view_pitch(id):
 @main.route('/pitch/upvote/<int:id>')
 @login_required
 def upvote(id):
-    '''
-    View function that add one to the vote_number column in the votes table
-    '''
-    pitch_id = Pitch.query.filter_by(id=id).first()
-
-    if pitch_id is None:
-         abort(404)
-
-    new_vote = Votes(vote=int(1), user_id=current_user.id, pitches_id=pitch_id.id)
-    new_vote.save_vote()
-    return redirect(url_for('.view_pitch', id=id))
+    get_pitches = Upvote.get_upvotes(id)
+    valid_string = f'{current_user.id}:{id}'
+    for pitch in get_pitches:
+        to_str = f'{pitch}'
+        print(valid_string+" "+to_str)
+        if valid_string == to_str:
+            return redirect(url_for('.view_pitch',id=id))
+        else:
+            continue
+    new_vote = Upvote(user = current_user, pitch_id=id)
+    new_vote.save()
+    return redirect(url_for('.view_pitch',id=id))
 
 
 
@@ -136,31 +137,18 @@ def upvote(id):
 @main.route('/pitch/downvote/<int:id>')
 @login_required
 def downvote(id):
-
-    '''
-    View function that add one to the vote_number column in the votes table
-    '''
-    pitch_id = Pitch.query.filter_by(id=id).first()
-
-    if pitch_id is None:
-         abort(404)
-
-    new_vote = Votes(vote=int(2), user_id=current_user.id, pitches_id=pitch_id.id)
-    new_vote.save_vote()
-    return redirect(url_for('.view_pitch', id=id))
-
-
-
-@main.route('/pitch/downvote/<int:id>')
-def vote_count(user_id,line_id):
-    '''
-    View function to return the total vote count per pitch
-    '''
-    votes = Votes.query.filter_by(user_id=user_id, line_id=line_id).all()
-
-    total_votes = votes.count()
-
-    return total_votes
+    pitch = Downvote.get_downvotes(id)
+    valid_string = f'{current_user.id}:{id}'
+    for p in pitch:
+        to_str = f'{p}'
+        print(valid_string+" "+to_str)
+        if valid_string == to_str:
+            return redirect(url_for('.view_pitch',id=id))
+        else:
+            continue
+    new_downvote = Downvote(user = current_user, pitch_id=id)
+    new_downvote.save()
+    return redirect(url_for('.view_pitch',id = id))
 
 
 

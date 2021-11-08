@@ -1,0 +1,26 @@
+{% extends 'bootstrap/base.html' %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Welcome to the 60secs-Impression Website</title>
+    {% endif %}
+</head>
+
+<body>
+    <!-- Content Block -->
+    {% block content %} 
+    {% endblock %}
+
+    <!-- Navbar block  -->
+    {% block navbar %} 
+    {% include 'navbar.html' %} 
+    {% endblock %}
+
+</body>
+
+</html>

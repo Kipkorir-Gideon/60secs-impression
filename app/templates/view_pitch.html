@@ -7,37 +7,38 @@
 
 <!-- content block -->
 {% block content %}
-<div class="container" style="font-family: 'Russo One', sans-serif;text-align:center;">
-    <div class="col-md-10">
-        <p class="text-left"><a class="btn btn-primary" href="{{url_for('.view_pitch',id=pitches.category_id)}}">Post Pitch</a></p>
-        <div class="well" style="background-color:lightblue">
+<div class="container" style="font-family:  sans-serif;text-align:center; border: 1px solid skyblue; border-radius: 15px;">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <!-- <p class="text-left"><a class="btn btn-warning" href="{{url_for('.view_pitch',id=pitches.category_id)}}">Post Pitch</a></p> -->
+        <div>
             <h3>{{pitches.content}}</h3>
         </div>
 
         <!-- comments -->
-        <div class="col-md-6 col-offset-1">
-            <table>
-                <tr>
-                    <td>
-                        <h4 class="text-left"><a class="btn btn-round" href="{{url_for('.upvote',id=pitches.id)}}">Upvote <span
-                            class="glyphicon glyphicon-thumbs-up" aria-hidden="true">{{pitches.upvote.count()}}</span> </a>
-                        </h4>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>
-                        <h4 class="text-left"><a class="btn btn-round" href="{{url_for('.downvote',id=pitches.id)}}">Downvote <span
-                            class="glyphicon glyphicon-thumbs-down" aria-hidden="true">{{pitches.downvote.count()}}</span> </a>
-                        </h4>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>
-                        <h4 class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Comments <a
-                            class="btn btn-primary" href="{{url_for('.post_comment',id=pitches.id)}}"> Add your comment</a>
-                        </h4>
-                    </td>
-                </tr>
-            </table>
+        <div class="jumbotron col-md-10">
+            <div>
+                    
+                <a class="btn text-success" href="{{url_for('.upvote',id=pitches.id)}}">Upvote <span
+                    class="glyphicon glyphicon-thumbs-up" aria-hidden="true">{{pitches.upvote.count()}}</span> </a>
+                
+            
+                <a class="btn text-danger" href="{{url_for('.downvote',id=pitches.id)}}">Downvote <span
+                    class="glyphicon glyphicon-thumbs-down" aria-hidden="true">{{pitches.downvote.count()}}</span> </a>
+                    <br>
+                    <hr>
 
+                <div class="text-center">
+                    <a class="btn btn-primary" href="{{url_for('.post_comment',id=pitches.id)}}"> Add comment</a>
+                </div>
+
+                        
+            </div>
+            <br><br>
+            <hr>
+            <br>
+            <h4 class="text-center" style="font-weight: bolder;">Comments</h4>
+            
             {% if comment %}
             {{ macro.displaySpecificPitch(comment)}}
             <hr>

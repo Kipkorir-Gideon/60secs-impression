@@ -3,7 +3,7 @@
 <div>
 
     <a href="{{url_for('.category',id=category.id)}}">
-        <p>{{category.name|upper}}</p>
+        <p>{{category.name}}</p>
     </a>
 </div>
 
@@ -12,19 +12,33 @@
 
 {% macro displayPitches(pitch_list) %}
 {% for pitches in pitch_list %}
-<div class="col-md-6">
-    <div class="pitch">
+<div class="">
+    <div>
         <div class="row">
-            <p>{{pitches.name|upper}}</p>
-            <div class="col-md-10 col-sm-6">
+            <p>{{pitches.name}}</p>
+            <div class="">
                 <h3>{{pitches.content}}</h3>
-                <h4> <span><a href=" {{url_for('.view_pitch',id=pitches.id)}}">Read comments</a></span> </h4>
+                <a class="btn btn-sm btn-primary mx-2" href=" {{url_for('.view_pitch',id=pitches.id)}}">Read Comments</a>
 
-                <a href=" {{url_for('.post_comment',id=pitches.id)}}">
-                    <h4>Comment</h4>
+                <a class="btn btn-sm btn-primary mx-2" href=" {{url_for('.post_comment',id=pitches.id)}}">
+                    Comment
                 </a>
-            </div>
+                <br><br>
+                <div>
+                    
+                    <a class="btn text-success" href="{{url_for('.upvote',id=pitches.id)}}">Upvote <span
+                        class="glyphicon glyphicon-thumbs-up" aria-hidden="true">{{pitches.upvote.count()}}</span> </a>
+                    
+                
+                    <a class="btn text-danger" href="{{url_for('.downvote',id=pitches.id)}}">Downvote <span
+                        class="glyphicon glyphicon-thumbs-down" aria-hidden="true">{{pitches.downvote.count()}}</span> </a>
+                    
+                            
+                </div>
+                
+            </div><br>
         </div>
+        <hr>
     </div>
     {% endfor %}
     {% endmacro %}
@@ -32,10 +46,10 @@
 
     {% macro displaySpecificPitch(specific_pitch_list) %}
     {% for comment in specific_pitch_list %}
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+    <div class="">
         <hr>
-        <p style="color:skyblue">{{comment.comment}} </p>
-        <p style="text-align:right; color:#555652; font-size:10px;">{{comment.time_commented.strftime('%Y/%m/%d || %r') }}</p>
+        <p>{{comment.comment}} </p>
+        <p style="text-align:end; color:#555652; font-size:10px;">{{comment.time_commented.strftime('%Y/%m/%d - %r') }}</p>
     </div>
     {% endfor %}
     {% endmacro %}

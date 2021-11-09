@@ -5,7 +5,7 @@ This is an application for pitching anything in 60 seconds.
 Ngetich Gideon
 
 ## Description
-This is i flask application that allows users to pitch anything basing on the categories. Categories can be added by the user or they can pitch from the available ones. A user as well can comment on a pitch of other users and can also like or dislike a pitch. A user must login for him/her to be able to do this.
+This is a flask application that allows users to pitch anything based on the categories. Categories can be added by the user or they can pitch from the available ones. A user as well can comment on a pitch of other users and can also like or dislike a pitch. A user must log in for him/her to be able to do this.
 
 ## Setup Requirements
 * Web Browser
